@@ -81,7 +81,7 @@ class Wikibiographie
         $this->set_locale();
         $this->define_admin_hooks();
         $this->define_public_hooks();
-        //$this->init_updater();
+        $this->init_updater();
 
         $this->loader->add_action('init', $this, 'register_biographie_post_type');
         $this->loader->add_action('wp_ajax_fetch_wikidata', $this, 'ajax_fetch_wikidata');
@@ -145,7 +145,7 @@ class Wikibiographie
         /**
          * The class responsible for fetching updates of the plugin.
          */
-        //require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wikibiographie-updater.php';
+        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wikibiographie-updater.php';
 
         $this->loader = new Wikibiographie_Loader();
     }
@@ -192,7 +192,7 @@ class Wikibiographie
      */
     private function init_updater()
     {
-        $plugin_updater = new Wikibiographie_Updater(__FILE__);
+        $plugin_updater = new Wikibiographie_Updater(plugin_dir_path(dirname(__FILE__)) . '/wikibiographie.php');
         $plugin_updater->set_username('DBourcetLibeo');
         $plugin_updater->set_repository('wikibiographie');
         $plugin_updater->initialize();

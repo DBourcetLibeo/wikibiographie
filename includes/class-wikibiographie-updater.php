@@ -69,7 +69,6 @@ class Wikibiographie_Updater
             curl_close($curl);
 
             $response = json_decode($response, true);
-            dd($request_uri);
 
             if (is_array($response)) {
                 $response = current($response);
@@ -95,9 +94,10 @@ class Wikibiographie_Updater
         if (property_exists($transient, 'checked')) {
             if ($checked = $transient->checked) {
                 $this->get_repository_info();
-
+                if (is_null($this->basename)) {
+                    $this->set_plugin_properties();
+                }
                 $out_of_date = version_compare($this->github_response['tag_name'], $checked[$this->basename], 'gt');
-
                 if ($out_of_date) {
                     $new_files = $this->github_response['zipball_url'];
                     $slug = current(explode('/', $this->basename));
@@ -144,7 +144,6 @@ class Wikibiographie_Updater
                     ],
                     'download_link' => $this->github_response['zipball_url']
                 ];
-
                 return (object) $plugin;
             }
         }

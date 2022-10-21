@@ -1,4 +1,1 @@
-<?php
-
-// Silence is golden
-// test comment
+<?php // Silence is golden
