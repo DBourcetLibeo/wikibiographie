@@ -16,7 +16,7 @@
  * Plugin Name:       WikiBiographie
  * Plugin URI:        https://www.productionsrhizome.org
  * Description:       Gestion de biographies et récupération d'informations depuis Wikipédia en français.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Productions Rhizome
  * Author URI:        https://www.productionsrhizome.org
  * License:           GPL-2.0+
