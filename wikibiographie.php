@@ -16,7 +16,7 @@
  * Plugin Name:       WikiBiographie
  * Plugin URI:        https://www.productionsrhizome.org
  * Description:       Gestion de biographies et récupération d'informations depuis Wikipédia en français.
- * Version:           1.0.2
+ * Version:           1.0.0
  * Author:            Productions Rhizome
  * Author URI:        https://www.productionsrhizome.org
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if (! defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('WIKIBIOGRAPHIE_VERSION', '1.0.2');
+define('WIKIBIOGRAPHIE_VERSION', '1.0.0');
 
 /**
  * The code that runs during plugin activation.
@@ -91,19 +91,3 @@ function run_wikibiographie()
     $plugin->run();
 }
 run_wikibiographie();
-
-//require_once plugin_dir_path(__FILE__) . 'includes/class-wikibiographie-updater.php';
-
-/**
- * Initialize the updater of the plugin.
- *
- * @since    1.0.0
- */
-/*function init_updater()
-{
-    $plugin_updater = new Wikibiographie_Updater(__FILE__);
-    $plugin_updater->set_username('DBourcetLibeo');
-    $plugin_updater->set_repository('wikibiographie');
-    $plugin_updater->initialize();
-}
-init_updater();*/

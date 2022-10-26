@@ -29,6 +29,9 @@
  */
 class Wikibiographie
 {
+    public const DEFAULT_USERNAME = 'DBourcetLibeo';
+    public const DEFAULT_REPOSITORY = 'wikibiographie';
+
     /**
      * The loader that's responsible for maintaining and registering all hooks that power
      * the plugin.
@@ -80,7 +83,6 @@ class Wikibiographie
         $this->load_dependencies();
         $this->set_locale();
         $this->define_admin_hooks();
-        $this->define_public_hooks();
         $this->init_updater();
 
         $this->loader->add_action('init', $this, 'register_biographie_post_type');
@@ -137,12 +139,6 @@ class Wikibiographie
         require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-wikibiographie-settings.php';
 
         /**
-         * The class responsible for defining all actions that occur in the public-facing
-         * side of the site.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wikibiographie-public.php';
-
-        /**
          * The class responsible for fetching updates of the plugin.
          */
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wikibiographie-updater.php';
@@ -193,24 +189,9 @@ class Wikibiographie
     private function init_updater()
     {
         $plugin_updater = new Wikibiographie_Updater(plugin_dir_path(dirname(__FILE__)) . '/wikibiographie.php');
-        $plugin_updater->set_username('DBourcetLibeo');
-        $plugin_updater->set_repository('wikibiographie');
+        $plugin_updater->set_username(self::DEFAULT_USERNAME);
+        $plugin_updater->set_repository(self::DEFAULT_REPOSITORY);
         $plugin_updater->initialize();
-    }
-
-    /**
-     * Register all of the hooks related to the public-facing functionality
-     * of the plugin.
-     *
-     * @since    1.0.0
-     * @access   private
-     */
-    private function define_public_hooks()
-    {
-        $plugin_public = new Wikibiographie_Public($this->get_plugin_name(), $this->get_version());
-
-        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
-        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
     }
 
     /**
@@ -426,6 +407,109 @@ class Wikibiographie
         return $meta;
     }
 
+    private function preview($text, $maxChars)
+    {
+        // If maxChars equals 0, then do not limit the number of characters
+        if ($maxChars == 0) {
+            return $text;
+        }
+
+        // If the text is shorter than the maximum number of characters, return the whole text
+        if (mb_strlen($text) <= $maxChars) {
+            return $text;
+        }
+
+        $text_truncated = mb_substr($text, 0, $maxChars);
+
+        // If there is a dot in the truncated text, return the text up until the last sentence
+        if (false !== mb_strpos($text_truncated, '.')) {
+            return trim(pathinfo($text_truncated, PATHINFO_FILENAME), '.') . '.';
+        }
+
+        // If there is a spaces in the truncated text, return the text up until the last space
+        if (false !== mb_strpos($text_truncated, ' ')) {
+            $exploded = explode(' ', $text_truncated);
+            array_pop($exploded);
+            return implode(' ', $exploded) . '…';
+        }
+
+        return $text_truncated . '…';
+    }
+
+    public function get_biographie($post_id)
+    {
+        $meta = $this->get_biographie_custom_data($post_id);
+        $options = get_option('wikibiographie_options');
+
+        $wiki = [
+            'name' => $meta['_biographie_wiki_name'],
+            'image' => $meta['_biographie_wiki_image'],
+            'pseudo' => $meta['_biographie_wiki_pseudonym'],
+            'dob' => $meta['_biographie_wiki_date_of_birth'],
+            'pob' => $meta['_biographie_wiki_place_of_birth'],
+            'dod' => $meta['_biographie_wiki_date_of_death'],
+            'pod' => $meta['_biographie_wiki_place_of_death'],
+            'occupation' => $meta['_biographie_wiki_occupation'],
+            'website' => $meta['_biographie_wiki_website'],
+            'introduction' => $this->preview($meta['_biographie_wiki_introduction'], $options['_wikibiographie_maximum_description_length_in_characters']),
+            'introduction_complement' => null,
+        ];
+
+        $custom = [
+            'name' => $meta['_biographie_custom_name'],
+            'image' => get_the_post_thumbnail_url(),
+            'pseudo' => $meta['_biographie_custom_pseudo'],
+            'dob' => $meta['_biographie_custom_date_naissance'],
+            'pob' => $meta['_biographie_custom_lieu_naissance'],
+            'dod' => $meta['_biographie_custom_date_deces'],
+            'pod' => $meta['_biographie_custom_lieu_deces'],
+            'occupation' => $meta['_biographie_custom_occupation'],
+            'website' => $meta['_biographie_custom_site_officiel'],
+            'introduction' => $meta['_biographie_custom_description'],
+            'introduction_complement' => $meta['_biographie_custom_description_complementaire'],
+        ];
+
+        $mergeBio = function ($wiki, $custom) {
+            $bio = [];
+            foreach ($wiki as $key => $value) {
+                if (!empty($custom[$key])) {
+                    $bio[$key] = $custom[$key];
+                } else {
+                    $bio[$key] = $wiki[$key];
+                }
+            }
+            return $bio;
+        };
+
+        $bio = $mergeBio($wiki, $custom);
+
+        $settings_mapping = [
+            'name' => 'display_name',
+            'image' => 'display_photo',
+            'pseudo' => 'display_pseudonym',
+            'dob' => 'display_date_of_birth',
+            'pob' => 'display_place_of_birth',
+            'dod' => 'display_date_of_death',
+            'pod' => 'display_place_of_death',
+            'occupation' => 'display_occupation',
+            'website' => 'display_website',
+            'introduction' => 'display_description',
+            'introduction_complement' => 'display_description',
+        ];
+
+        foreach ($settings_mapping as $attr => $setting) {
+            if (!($options[$setting] ?? true)) {
+                unset($bio[$attr]);
+            }
+        }
+
+        if (!empty($meta['_biographie_custom_wikipedia_url'])) {
+            $bio['wikipedia_url'] = $meta['_biographie_custom_wikipedia_url'];
+        }
+
+        return $bio;
+    }
+
     /**
      * Save the content of the Biographie meta box in the database.
      *
@@ -568,7 +652,7 @@ class Wikibiographie
         if (is_single() && get_query_var('post_type') === self::POST_TYPE) {
             $templates = [
                 'single-biographie.php',
-                'templates/single-biographie.php'
+                'wikibiographie/single-biographie.php'
             ];
             $template = locate_template($templates);
             if (!$template) {
@@ -592,7 +676,7 @@ class Wikibiographie
         if (is_archive() && get_query_var('post_type') === self::POST_TYPE) {
             $templates = [
                 'archive-biographie.php',
-                'templates/archive-biographie.php'
+                'wikibiographie/archive-biographie.php'
             ];
             $template = locate_template($templates);
             if (!$template) {

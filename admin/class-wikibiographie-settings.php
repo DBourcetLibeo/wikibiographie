@@ -75,7 +75,7 @@ class WikiBiographie_Settings_Page {
                 'id' => '_wikibiographie_maximum_description_length_in_characters',
                 'type' => 'input',
                 'callback' => 'input_callback',
-                'tip' => 'Saisir 0 pour ne pas limiter le nombre de caractères.<br>WikiBiographie essaie dans la mesure du possible de tronquer le texte en fin de phrase.<br>À noter que si la première phrase est plus longue le nombre de caractères choisi, la troncature s\'effectue plutôt à la fin d\'un mot.',
+                'tip' => 'Saisir 0 pour ne pas limiter le nombre de caractères.<br>WikiBiographie essaie dans la mesure du possible de tronquer le texte en fin de phrase.<br>À noter que si la première phrase est plus longue que le nombre de caractères choisi, la troncature s\'effectue plutôt à la fin d\'un mot.',
             ),
             array(
                 'section' => 'wikibiographie_section',
@@ -131,7 +131,7 @@ class WikiBiographie_Settings_Page {
         }
 
         if ((int) $data['_wikibiographie_maximum_description_length_in_characters'] < 0 || (int) $data['_wikibiographie_maximum_description_length_in_characters'] > 5000) {
-            add_settings_error('wikibiographie_max_char_errors', 'wikibiographie_message_max_char_values', __('Le nombre de caractères maximum pour les descriptions doit être plus grand que 0 et plus bas que 5000.', 'wikibiographie'), 'error');
+            add_settings_error('wikibiographie_max_char_errors', 'wikibiographie_message_max_char_values', __('Le nombre de caractères maximum pour les descriptions doit être plus grand ou égal à 0 et plus petit que 5000.', 'wikibiographie'), 'error');
             return $old_options;
         }
         foreach (array_keys($data) as $k) {

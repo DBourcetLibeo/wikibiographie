@@ -1,10 +1,10 @@
 # WikiBiographie
 
-## Introduction
+# Introduction
 
 WikiBiographie est une extension pour WordPress qui offre la possibilité de gérer une collection de biographies de personnalités. Sa force réside dans le fait qu'il est possible de récupérer les informations directement de Wikipédia en français, facilitant ainsi le travail de rédaction.
 
-## Installation
+# Installation
 
 L'extension peut être installée en copiant son dossier décompressé `wikibiographie` dans le dossier `wp-content/plugins` du site WordPress.
 
@@ -14,19 +14,19 @@ Une fois installée, il convient d'activer l'extension. Pour cela, se rendre dan
 
 Voilà ! L'extension est désormais activée. Un nouveau type d'article devient accessible depuis le menu latéral : "Biographies".
 
-## Utilisation
+# Utilisation
 
 ![Menu Biographie](./user_guide_imgs/biographie_menu.png)  
 
 Les articles de type "Biographie" sont accessibles via le menu latéral du panneau d'administration. La page des biographies permet de consulter et de modifier les biographies existantes, ainsi que de créer de nouvelles biographies.
 
-### Ajouter une biographie
+## Ajouter une biographie
 
 ![Ajouter une biographie](./user_guide_imgs/add_biography.png)  
 
 En cliquant sur le bouton "Ajouter une biographie" depuis la liste des biographies, le formulaire de création de biographie s'ouvre. Ce formulaire se divise en deux panneaux distincts : "Wikipédia" et "Informations biographiques".
 
-#### Panneau Wikipédia
+### Panneau Wikipédia
 
 ![Panneau Wikipédia](./user_guide_imgs/wikipedia_section.png)  
 
@@ -34,9 +34,10 @@ Ce panneau permet de spécifier l'URL de la page Wikipédia à partir de laquell
 
 Le bouton "Rafraîchir les informations biographiques Wikipédia" récupére les informations à la volée pour les afficher directement dans la partie "Wikipédia" du panneau "Informations biographiques". Il est là pour faciliter la suite de la rédaction de la biographie.
 
-#### Panneau Informations biographiques
+### Panneau Informations biographiques
 
-![Panneau Information biographiques](./user_guide_imgs/biography_section.png)  
+
+![Panneau Informations biographiques](./user_guide_imgs/biography_section.png)  
 
 Ce panneau offre les divers champs disponibles d'une biographie. Il est divisé en deux volets, "Wikipédia" et "Personnalisé".
 
@@ -60,17 +61,21 @@ Les champs sont détaillés ci-dessous.
 | Description | Texte d'introduction de la page Wikipédia en français | Oui | - |
 | Description complémentaire | N/A | Non, ce champ est libre, sans équivalent avec Wikipédia  | Le texte saisi dans ce champ s'ajoute à la suite du champ "Description" |
 
-### Consulter une biographie
+## Consulter une biographie
 
 ![Consulter une biographie](./user_guide_imgs/open_biography.png)  
 
 En survolant une biographie de la liste, il suffit de cliquer sur le lien "Afficher" pour consulter la biographie telle qu'elle est affichée sur le site. À noter que si la biographie n'est pas publiée, le lien devient "Aperçu". La biographie s'affiche en utilisant le gabarit par défaut de l'extension. Il est possible de définir un gabarit personnalisé pour l'affichage d'une biographie (à nommer "single-biographie.php") et pour l'affichage des listes de biographies (à nommer "archive-biographie.php").
 
-### Modifier une biographie
+## Modifier une biographie
 
 Il suffit de cliquer sur le nom de la biographie à modifier depuis la liste des biographies.
 
-### Gérer les paramètres de l'extension
+## Personnaliser l'affichage des biographies
+
+Les gabarits (templates) fournis avec l'extension sont une base qu'il est conseillé d'adapter au thème utilisé sur le site WordPress. Pour ce faire, il suffit de créer un dossier nommé `wikibiographie` dans le dossier du thème et d'y ajouter deux fichiers : `single-biographie.php` et `archive-biographie.php` configurés selon les besoins. Se baser sur les fichiers originaux situés dans le dossier `templates` de l'extension WikiBiographie si nécessaire.
+
+## Gérer les paramètres de l'extension
 
 ![Gérer les paramètres de l'extension](./user_guide_imgs/open_settings.png)  
 
@@ -78,7 +83,7 @@ Le lien "WikiBiographie" situé dans la partie "Réglages" du menu latéral du p
 
 Les actions possibles et les paramètres configurables sont mentionnés ci-après.
 
-#### Vider les biographies Wikipédia en cache
+### Vider les biographies Wikipédia en cache
 
 Afin d'éviter de multiplier les appels à Wikipédia à chaque consultation d'une biographie, l'extension WikiBiographie utilise la fonctionnalité de "transient" de WordPress. Cela signifie que les informations biographiques provenant de Wikipédia sont stockées pour une certaine durée, on dit qu'elles sont mises en cache. Les informations sont de nouveau récupérées de Wikipédia lorsqu'une biographie est consultée sur le site et que les données mises en cache sont expirées.
 
@@ -86,7 +91,7 @@ S'il est nécessaire de supprimer toutes les informations mises en cache, il suf
 
 ![Vider les biographies Wikipédia en cache](./user_guide_imgs/empty_cache.png)  
 
-#### Gérer la durée de mise en cache des biographies provenant de Wikipédia
+### Gérer la durée de mise en cache des biographies provenant de Wikipédia
 
 Les informations mises en cache ne le sont que pour une durée limitée. Cette durée est configurable selon des valeurs prédéfinies dans la liste déroulante. Il est à noter que la nouvelle durée choisie n'affectera pas les informations déjà mises en cache aussi longtemps que celles-ci demeureront valides.
 
@@ -94,7 +99,7 @@ Les informations mises en cache ne le sont que pour une durée limitée. Cette d
 
 Il est simple d'invalider les informations mises en cache, il suffit de les vider (voir "Vider les biographies Wikipédia en cache").
 
-#### Limiter le nombre maximum de caractères à afficher pour les descriptions
+### Limiter le nombre maximum de caractères à afficher pour les descriptions
 
 Ce paramètre permet de limiter le nombre caractères affichés de l'information "Description" sur la page d'une biographie (ne concerne pas "Description complémentaire" qui est un champ libre). Mettre la valeur "0" (zéro) pour ne pas limiter le nombre de caractères affichés.
 
@@ -102,7 +107,7 @@ Ce paramètre permet de limiter le nombre caractères affichés de l'information
 
 WikiBiographie essaie avant tout de tronquer le texte à la fin d'une phrase, dans la limite du nombre maximum choisi. Si cela n'est pas possible, la troncature s'effectue plutôt en fin de mot.
 
-#### Choisir les informations à afficher
+### Choisir les informations à afficher
 
 Il est possible de ne pas afficher certaines informations biographiques simplement en les décochant.
 

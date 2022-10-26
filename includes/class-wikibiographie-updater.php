@@ -2,13 +2,13 @@
 
 class Wikibiographie_Updater
 {
+
     private $file;
     private $plugin;
     private $basename;
     private $active;
     private $username;
     private $repository;
-    // private $authorize_token;
     private $github_response;
 
     public function __construct($file)
@@ -36,11 +36,6 @@ class Wikibiographie_Updater
         $this->repository = $repository;
     }
 
-    /*public function authorize($token)
-    {
-        $this->authorize_token = $token;
-    }*/
-
     private function get_repository_info()
     {
         if (is_null($this->github_response)) {
@@ -59,7 +54,6 @@ class Wikibiographie_Updater
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => "GET",
                 CURLOPT_HTTPHEADER => [
-                    // "Authorization: token " . $this->authorize_token,
                     "User-Agent: Wikibiographie_Updater/0.1"
                 ]
             ]);
@@ -73,10 +67,6 @@ class Wikibiographie_Updater
             if (is_array($response)) {
                 $response = current($response);
             }
-
-            /*if ($this->authorize_token) {
-                $response['zipball_url'] = add_query_arg('access_token', $this->authorize_token, $response['zipball_url']);
-            }*/
 
             $this->github_response = $response;
         }

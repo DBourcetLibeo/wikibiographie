@@ -4,7 +4,7 @@
  */
 
 
- #wikibiographie-metabox-table {
+#wikibiographie-metabox-table {
     width: 100%;
     text-align: left;
     table-layout: fixed;
@@ -49,7 +49,6 @@ div.info {
 div.info {
     font-style: italic;
 }
-
 
 p.hide { display: none; }
 p.error { color: red; }
